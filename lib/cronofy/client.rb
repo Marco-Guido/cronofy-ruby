@@ -265,8 +265,15 @@ module Cronofy
     # parameters.
     # Raises Cronofy::TooManyRequestsError if the request exceeds the rate
     # limits for the application.
-    def delete_event(calendar_id, event_id)
-      delete("/v1/calendars/#{calendar_id}/events", event_id: event_id)
+
+    # --------------------------------------------
+    # Custom methods for full events authorization
+    # --------------------------------------------
+
+    #def delete_event(calendar_id, event_id)
+    #  delete("/v1/calendars/#{calendar_id}/events", event_id: event_id)
+    def delete_event(calendar_id, options = {})
+      delete("/v1/calendars/#{calendar_id}/events", options)
       nil
     end
 
@@ -557,6 +564,15 @@ module Cronofy
 
       response = post("/v1/permissions", body)
       parse_json(PermissionsResponse, "permissions_request", response)
+    end
+
+    # --------------------------------------------
+    # Custom methods for full events authorization
+    # --------------------------------------------
+
+    def user_permission_link(calendar_id, redirect_uri, options = {})
+      response = post("v1/permissions",redirect_uri: redirect_uri, permissions: [{calendar_id: calendar_id, permission_level: "unrestricted"}])
+      return JSON.parse(response.body)["permissions_request"]["url"]
     end
 
     private
