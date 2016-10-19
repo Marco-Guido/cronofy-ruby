@@ -571,7 +571,7 @@ module Cronofy
     # --------------------------------------------
 
     def user_permission_link(calendar_id, redirect_uri, options = {})
-      response = post("v1/permissions",redirect_uri: redirect_uri, permissions: [{calendar_id: calendar_id, permission_level: "unrestricted"}])
+      response = post("v1/permissions",redirect_uri: redirect_uri, permissions: [{calendar_id: calendar_id, permission_level: "unrestricted"}], **options)
       return JSON.parse(response.body)["permissions_request"]["url"]
     end
 
